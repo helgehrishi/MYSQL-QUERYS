@@ -1,0 +1,48 @@
+-- 05 UN GROUP THE GIVEN DATA
+;
+
+DROP TABLE TRAVEL_ITEMS;
+
+CREATE TABLE TRAVEL_ITEMS (
+    ID INT,
+    ITEM_NAME VARCHAR(50),
+    TOTAL_COUNT INT
+);
+
+INSERT INTO
+    TRAVEL_ITEMS
+VALUES
+    (1, 'WATER BOTTLE', 2),
+    (2, 'TENT', 1),
+    (3, 'APPLE', 4);
+
+-- SOLUTION
+WITH RECURSIVE CTE AS (
+    SELECT
+        ID,
+        ITEM_NAME,
+        TOTAL_COUNT,
+        1 AS LEVEL
+    FROM
+        TRAVEL_ITEMS
+    UNION
+    ALL
+    SELECT
+        CTE.ID,
+        CTE.ITEM_NAME,
+        CTE.TOTAL_COUNT - 1,
+        LEVEL + 1 AS LEVEL
+    FROM
+        CTE
+        INNER JOIN TRAVEL_ITEMS T ON T.ITEM_NAME = CTE.ITEM_NAME
+        AND T.ID = CTE.ID
+    WHERE
+        CTE.TOTAL_COUNT > 1
+)
+SELECT
+    ID,
+    ITEM_NAME
+FROM
+    CTE
+ORDER BY
+    1;
